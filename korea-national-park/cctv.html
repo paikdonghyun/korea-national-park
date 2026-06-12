@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCTV 설치 현황 — 국립공원 정보</title>
+<meta name="description" content="국립공원공단 CCTV 설치 현황 공공데이터 검색·통계">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header id="site-header"></header>
+
+<div class="stats" id="cctv-stats" style="display:none">
+  <div class="stat"><div class="label">총 CCTV 대수</div><div class="value" id="statTotal">-</div></div>
+  <div class="stat"><div class="label">설치 지점</div><div class="value" id="statSpots">-</div></div>
+  <div class="stat"><div class="label">담당 부서(사무소)</div><div class="value" id="statDepts">-</div></div>
+</div>
+
+<main>
+  <div id="status-area"></div>
+
+  <div id="content" style="display:none">
+    <section>
+      <h2>사무소별 설치 대수</h2>
+      <p class="sub">막대를 누르면 아래 목록이 해당 사무소로 필터링됩니다.</p>
+      <div class="chart" id="chart"></div>
+      <button class="chart-toggle" id="chartToggle">전체 보기</button>
+    </section>
+
+    <section>
+      <h2>설치 내역 검색</h2>
+      <p class="sub">위치·촬영범위·세부목적으로 검색하거나 설치목적별로 추려볼 수 있습니다.</p>
+
+      <div class="filters">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="searchInput" type="search" placeholder="위치, 촬영범위, 세부목적 검색 (예: 대피소, 천왕봉)" aria-label="검색">
+        </div>
+        <select id="deptSelect" aria-label="담당부서 선택">
+          <option value="">전체 사무소</option>
+        </select>
+      </div>
+      <div class="chips" id="purposeChips"></div>
+
+      <p class="result-count"><strong id="filteredCount">0</strong>건의 설치 내역<span id="filteredUnits"></span><button class="clear-btn" id="clearBtn" style="display:none">필터 초기화</button></p>
+
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>담당부서</th>
+              <th>위치</th>
+              <th style="text-align:right">대수</th>
+              <th>설치목적</th>
+              <th>촬영범위</th>
+              <th>세부목적</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="empty" id="emptyState" style="display:none">
+          <strong>검색 결과가 없습니다</strong>
+          <p>검색어를 줄이거나 필터를 초기화해 보세요.</p>
+        </div>
+      </div>
+      <div class="pager" id="pager"></div>
+    </section>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/components.js"></script>
+<script src="js/pages/cctv.js"></script>
+</body>
+</html>

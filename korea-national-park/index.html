@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국립공원 정보</title>
+<meta name="description" content="공공데이터로 보는 대한민국 국립공원 정보 사이트">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header id="site-header"></header>
+
+<div class="stats" id="home-stats" style="display:none">
+  <div class="stat"><div class="label">총 CCTV 대수</div><div class="value" id="statTotal">-</div></div>
+  <div class="stat"><div class="label">설치 지점</div><div class="value" id="statSpots">-</div></div>
+  <div class="stat"><div class="label">담당 부서(사무소)</div><div class="value" id="statDepts">-</div></div>
+</div>
+
+<main>
+  <div id="status-area"></div>
+
+  <section>
+    <h2>콘텐츠</h2>
+    <p class="sub">국립공원공단 공공데이터를 주제별로 살펴보세요. 새로운 콘텐츠가 계속 추가됩니다.</p>
+    <div class="card-grid">
+      <a class="card" href="cctv.html">
+        <span class="badge">공개 중</span>
+        <h3>CCTV 설치 현황</h3>
+        <p>전국 국립공원 사무소가 운영하는 CCTV의 위치·대수·설치목적을 검색하고 사무소별 통계를 확인합니다.</p>
+        <span class="go" aria-hidden="true">→</span>
+      </a>
+      <div class="card soon">
+        <span class="badge">준비 중</span>
+        <h3>탐방로 정보</h3>
+        <p>공원별 탐방로 코스, 거리, 난이도 정보를 제공할 예정입니다.</p>
+      </div>
+      <div class="card soon">
+        <span class="badge">준비 중</span>
+        <h3>공원 시설 안내</h3>
+        <p>대피소, 야영장, 주차장 등 공원 내 시설 현황을 제공할 예정입니다.</p>
+      </div>
+      <div class="card soon">
+        <span class="badge">준비 중</span>
+        <h3>날씨·통제 정보</h3>
+        <p>공원별 기상 정보와 탐방로 통제 현황을 제공할 예정입니다.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/components.js"></script>
+<script src="js/pages/home.js"></script>
+</body>
+</html>

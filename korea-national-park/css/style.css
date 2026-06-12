@@ -1,0 +1,143 @@
+/* ==========================================================
+   국립공원 정보 사이트 — 공통 스타일
+   팔레트: 침엽수 그린 / 이끼 / 한지빛 / 감빛 포인트
+   ========================================================== */
+:root{
+  --ink:#143226;
+  --pine:#2E5944;
+  --moss:#7FA08C;
+  --mist:#DDE6DD;
+  --paper:#F2F5F0;
+  --persimmon:#D96C3F;
+  --line:#C4D1C4;
+  --radius:10px;
+  --font-display:'Gowun Batang', serif;
+  --font-body:'IBM Plex Sans KR', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);line-height:1.6}
+a{color:inherit}
+
+/* ---------- 상단 네비게이션 ---------- */
+#site-header{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.topnav{max-width:1080px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:28px;position:relative;z-index:4}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:18px;text-decoration:none;color:var(--paper)}
+.brand svg{width:26px;height:20px;color:var(--moss)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{text-decoration:none;font-size:14px;padding:7px 14px;border-radius:18px;color:#BFD2C5}
+.nav-links a:hover{background:rgba(255,255,255,.08);color:var(--paper)}
+.nav-links a.active{background:var(--pine);color:var(--paper)}
+.nav-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--pine);color:var(--paper);border-radius:8px;font-size:18px;padding:4px 12px;cursor:pointer}
+
+/* ---------- 히어로 ---------- */
+.header-inner{max-width:1080px;margin:0 auto;padding:46px 24px 120px;position:relative;z-index:2}
+#site-header.compact .header-inner{padding-bottom:96px}
+.eyebrow{font-size:13px;letter-spacing:.25em;color:var(--moss);text-transform:uppercase;margin-bottom:14px}
+#site-header h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,5vw,44px);line-height:1.3}
+.header-desc{margin-top:16px;max-width:560px;color:#BFD2C5;font-weight:300;font-size:15px}
+.ridge{position:absolute;bottom:-2px;left:0;width:100%;z-index:1}
+.ridge svg{display:block;width:100%;height:110px}
+
+main{max-width:1080px;margin:0 auto;padding:48px 24px 80px}
+section{margin-bottom:56px}
+h2{font-family:var(--font-display);font-size:24px;margin-bottom:6px}
+.sub{font-size:14px;color:#5C7065;margin-bottom:22px}
+
+/* ---------- 통계 카드 ---------- */
+.stats{max-width:1080px;margin:-56px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative;z-index:3}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:0 4px 14px rgba(20,50,38,.06)}
+.stat .label{font-size:13px;color:var(--pine);letter-spacing:.06em}
+.stat .value{font-family:var(--font-display);font-size:34px;font-weight:700;margin-top:4px}
+.stat .unit{font-size:15px;font-weight:400;margin-left:2px;color:var(--moss)}
+
+/* ---------- 카드 그리드 (홈 메뉴) ---------- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;text-decoration:none;display:block;transition:transform .15s, box-shadow .15s;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(20,50,38,.1)}
+.card h3{font-family:var(--font-display);font-size:19px;margin-bottom:8px}
+.card p{font-size:14px;color:#5C7065}
+.card .go{position:absolute;top:24px;right:22px;color:var(--persimmon);font-size:18px}
+.card.soon{opacity:.55;cursor:default}
+.card.soon:hover{transform:none;box-shadow:none}
+.card .badge{display:inline-block;font-size:11px;background:var(--mist);color:var(--pine);border-radius:10px;padding:2px 10px;margin-bottom:10px;letter-spacing:.05em}
+.card.soon .badge{background:#EFE3D9;color:#8A5A3B}
+
+/* ---------- 차트 ---------- */
+.chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 56px;align-items:center;gap:12px;cursor:pointer;border-radius:6px;padding:2px 4px}
+.bar-row:hover{background:#E7EEE7}
+.bar-row.active{background:var(--mist)}
+.bar-name{font-size:14px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:18px;position:relative}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--pine),var(--moss));border-radius:3px;min-width:3px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.bar-row.active .bar-fill{background:linear-gradient(90deg,var(--persimmon),#E69A6F)}
+.bar-count{font-size:13px;color:var(--pine);font-variant-numeric:tabular-nums}
+.chart-toggle{margin-top:14px;background:none;border:1px solid var(--line);border-radius:20px;padding:7px 18px;font-family:var(--font-body);font-size:13px;color:var(--pine);cursor:pointer}
+.chart-toggle:hover{background:var(--mist)}
+
+/* ---------- 필터 ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;align-items:center}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--line);border-radius:24px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--ink)}
+.search input:focus{outline:2px solid var(--pine);outline-offset:1px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--moss)}
+select{padding:11px 14px;border:1px solid var(--line);border-radius:24px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--ink);cursor:pointer}
+select:focus{outline:2px solid var(--pine);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;font-family:var(--font-body);cursor:pointer;color:var(--pine)}
+.chip:hover{background:var(--mist)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.result-count{font-size:13px;color:#5C7065;margin-bottom:12px}
+.result-count strong{color:var(--persimmon)}
+.clear-btn{background:none;border:none;font-family:var(--font-body);font-size:13px;color:var(--persimmon);cursor:pointer;text-decoration:underline;padding:0;margin-left:8px}
+
+/* ---------- 테이블 ---------- */
+.table-wrap{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{background:var(--ink);color:var(--paper);font-weight:500;text-align:left;padding:12px 16px;font-size:13px;letter-spacing:.04em;white-space:nowrap}
+tbody td{padding:12px 16px;border-top:1px solid #E8EFE8;vertical-align:top}
+tbody tr:hover{background:#F6F9F5}
+td.num{font-variant-numeric:tabular-nums;text-align:right}
+.tag{display:inline-block;font-size:12px;padding:2px 10px;border-radius:12px;background:var(--mist);color:var(--ink);white-space:nowrap}
+.tag.warn{background:#F5E0D3;color:#8A3B16}
+.tag.fire{background:#F9E9C8;color:#7A5410}
+.empty{padding:48px;text-align:center;color:#5C7065}
+.empty p{margin-top:8px;font-size:14px}
+
+/* ---------- 페이지네이션 ---------- */
+.pager{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:22px;flex-wrap:wrap}
+.pager button{min-width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:8px;font-family:var(--font-body);font-size:14px;cursor:pointer;color:var(--ink);padding:0 8px}
+.pager button:hover:not(:disabled){background:var(--mist)}
+.pager button.cur{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .dots{padding:0 4px;color:#5C7065}
+
+/* ---------- 로딩 / 오류 ---------- */
+.loading{margin:60px auto;text-align:center}
+.spinner{width:44px;height:44px;border:4px solid var(--mist);border-top-color:var(--pine);border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-box{background:#fff;border:1px solid #E5B9A5;border-radius:var(--radius);max-width:520px;margin:60px auto;padding:36px 28px;text-align:center}
+.error-box h3{font-family:var(--font-display);margin-bottom:10px}
+.error-box p{font-size:14px;color:#5C7065;margin-bottom:18px}
+.error-box button{background:var(--persimmon);color:#fff;border:none;border-radius:24px;padding:10px 24px;font-family:var(--font-body);font-size:14px;cursor:pointer}
+
+#site-footer{background:var(--ink);color:#9DB8A8;font-size:13px;padding:28px 24px;text-align:center;line-height:1.8}
+#site-footer .src{color:var(--paper)}
+
+/* ---------- 반응형 ---------- */
+@media(max-width:720px){
+  .stats{grid-template-columns:1fr;margin-top:-40px}
+  .bar-row{grid-template-columns:88px 1fr 48px}
+  .bar-name{font-size:12px}
+  thead th:nth-child(5),tbody td:nth-child(5){display:none}
+  .header-inner{padding:36px 20px 96px}
+  .nav-toggle{display:block}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--ink);flex-direction:column;padding:8px 16px 16px;border-top:1px solid var(--pine)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 14px;border-radius:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .bar-fill{transition:none}
+  .card{transition:none}
+  .spinner{animation-duration:2s}
+}
