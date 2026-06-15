@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>실시간 영상 — 국립공원 정보</title>
+<meta name="description" content="전국 국립공원 실시간 CCTV 영상">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.10.0/video-js.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.10.0/video.min.js"></script>
+<style>
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;margin-top:36px;}
+.cam-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 4px 14px rgba(20,50,38,.06);transition:box-shadow .2s;cursor:pointer;}
+.cam-card:hover{box-shadow:0 8px 28px rgba(20,50,38,.13);}
+.cam-card.active{border:2px solid var(--persimmon);box-shadow:0 0 0 4px rgba(217,108,63,.15);}
+.cam-thumb{position:relative;aspect-ratio:16/9;background:var(--ink);overflow:hidden;}
+.cam-thumb .video-js{width:100%!important;height:100%!important;}
+.cam-thumb .video-js .vjs-big-play-button{top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(20,50,38,.65);border:2px solid var(--moss);border-radius:50%;width:48px;height:48px;line-height:48px;font-size:18px;}
+.cam-thumb .video-js:hover .vjs-big-play-button{background:var(--pine);}
+.live-dot{position:absolute;top:10px;left:10px;z-index:5;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:3px 8px;border-radius:20px;font-family:var(--font-body);letter-spacing:.08em;}
+.live-dot::before{content:'';width:7px;height:7px;border-radius:50%;background:#EF4444;animation:pulse-red 1.4s infinite;}
+@keyframes pulse-red{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.cam-info{padding:14px 16px 16px;}
+.cam-park{font-size:11px;color:var(--moss);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.cam-name{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.cam-desc{font-size:13px;color:#5C7065;}
+.cam-status{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;padding:3px 10px;border-radius:12px;background:var(--mist);color:var(--pine);}
+.cam-status.error{background:#FEE2E2;color:#B91C1C;}
+#main-player-wrap{display:none;background:var(--ink);border-radius:var(--radius);overflow:hidden;margin-bottom:32px;position:relative;}
+#main-player-wrap.visible{display:block;}
+#main-player-wrap .video-js{width:100%!important;max-height:520px;}
+#main-player-title{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-family:var(--font-display);font-size:20px;z-index:10;pointer-events:none;}
+#main-player-title small{display:block;font-family:var(--font-body);font-size:13px;color:#BFD2C5;margin-bottom:3px;}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+.notice-bar{background:#F9E9C8;border:1px solid #E8D08A;border-radius:8px;padding:10px 16px;font-size:13px;color:#7A5410;margin-bottom:28px;}
+@media(max-width:720px){.live-grid{grid-template-columns:1fr;}#main-player-wrap .video-js{max-height:220px;}}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<main>
+<div class="notice-bar">⚡ 영상은 <strong>국립공원공단(knps.or.kr)</strong> HLS 스트림을 직접 불러옵니다. 현장의 기상·통신 상황에 따라 영상이 일시 중지될 수 있습니다.</div>
+<div id="main-player-wrap">
+  <video id="main-player" class="video-js vjs-big-play-centered" controls preload="none" playsinline></video>
+  <div id="main-player-title"><small id="main-park-label"></small><span id="main-cam-label"></span></div>
+</div>
+<div class="filter-row" id="filterRow"><button class="chip on" data-filter="">전체</button></div>
+<div class="live-grid" id="liveGrid"></div>
+</main>
+<footer id="site-footer"></footer>
+<script src="../js/config.js"></script>
+<script src="../js/components.js"></script>
+<script>
+Components.renderHeader({eyebrow:'국립공원공단 실시간 CCTV',title:'지금 이 순간의<br>국립공원',desc:'전국 국립공원 주요 지점의 실시간 기상·경관 영상입니다.',compact:true});
+Components.renderFooter();
+const CAMS=[
+  {id:'wongbong',park:'지리산',name:'천왕봉',desc:'중산리에서 천왕봉을 바라보는 장면',stream:'https://live.knps.or.kr/cctv/hls/wongbong.m3u8'},
+  {id:'solak',park:'설악산',name:'울산바위',desc:'권금성에서 울산바위를 바라보는 장면',stream:'https://live.knps.or.kr/cctv/hls/solak.m3u8'},
+  {id:'bukhan',park:'북한산',name:'족두리봉',desc:'북한산 족두리봉 일대',stream:'https://live.knps.or.kr/cctv/hls/bukhan.m3u8'},
+  {id:'sobak',park:'소백산',name:'연화봉',desc:'제2연화봉에서 연화봉을 바라보는 장면',stream:'https://live.knps.or.kr/cctv/hls/sobak.m3u8'},
+  {id:'zchunje',park:'태백산',name:'천제단',desc:'태백산 천제단',stream:'https://live.knps.or.kr/cctv/hls/zchunje.m3u8'},
+  {id:'zjungchung',park:'설악산',name:'대청봉',desc:'설악산 대청봉',stream:'https://live.knps.or.kr/cctv/hls/zjungchung.m3u8'},
+  {id:'zjulje',park:'주왕산',name:'절재',desc:'주왕산 절재',stream:'https://live.knps.or.kr/cctv/hls/zjulje.m3u8'},
+  {id:'zsulchun',park:'덕유산',name:'설천봉',desc:'덕유산 설천봉',stream:'https://live.knps.or.kr/cctv/hls/zsulchun.m3u8'},
+  {id:'zduro',park:'오대산',name:'두로령',desc:'오대산 두로령',stream:'https://live.knps.or.kr/cctv/hls/zduro.m3u8'},
+  {id:'jodo',park:'다도해해상',name:'지리청송해변',desc:'지리청송해변 전경',stream:'https://live.knps.or.kr/cctv/hls/jodo.m3u8'},
+  {id:'sapesan',park:'북한산',name:'사패산',desc:'북한산 사패산 일대',stream:'https://live.knps.or.kr/cctv/hls/sapesan.m3u8'},
+  {id:'jangbuljai',park:'무등산',name:'장불재',desc:'무등산 장불재',stream:'https://live.knps.or.kr/cctv/hls/jangbuljai.m3u8'},
+  {id:'sinsungbong',park:'계룡산',name:'천황봉',desc:'계룡산 천황봉',stream:'https://live.knps.or.kr/cctv/hls/sinsungbong.m3u8'},
+  {id:'sangwonsa',park:'치악산',name:'상원사',desc:'치악산 상원사',stream:'https://live.knps.or.kr/cctv/hls/sangwonsa.m3u8'},
+];
+const esc=Components.esc;let mainPlayer=null,activeFilter='';
+const parks=[...new Set(CAMS.map(c=>c.park))];
+const filterRow=document.getElementById('filterRow');
+parks.forEach(park=>{const btn=document.createElement('button');btn.className='chip';btn.dataset.filter=park;btn.textContent=park;filterRow.appendChild(btn);});
+filterRow.addEventListener('click',e=>{const btn=e.target.closest('.chip');if(!btn)return;activeFilter=btn.dataset.filter;filterRow.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===btn));renderGrid();});
+function renderGrid(){
+  const grid=document.getElementById('liveGrid');
+  const list=activeFilter?CAMS.filter(c=>c.park===activeFilter):CAMS;
+  grid.innerHTML='';
+  list.forEach(cam=>{
+    const card=document.createElement('div');card.className='cam-card';card.dataset.id=cam.id;
+    card.innerHTML=`<div class="cam-thumb"><video id="thumb-${esc(cam.id)}" class="video-js vjs-fluid" preload="none" playsinline muted></video><span class="live-dot">LIVE</span></div><div class="cam-info"><div class="cam-park">${esc(cam.park)} 국립공원</div><div class="cam-name">${esc(cam.name)}</div><div class="cam-desc">${esc(cam.desc)}</div><span class="cam-status" id="status-${esc(cam.id)}">대기중</span></div>`;
+    grid.appendChild(card);
+    const tp=videojs(`thumb-${cam.id}`,{controls:false,muted:true,preload:'none',sources:[{src:cam.stream,type:'application/x-mpegURL'}],html5:{vhs:{overrideNative:true}}});
+    tp.on('playing',()=>setStatus(cam.id,true));tp.on('error',()=>setStatus(cam.id,false,'신호 없음'));tp.play().catch(()=>{});
+    card.addEventListener('click',()=>openMain(cam));
+  });
+}
+function setStatus(id,ok,msg){const el=document.getElementById(`status-${id}`);if(!el)return;el.className='cam-status'+(ok?'':' error');el.textContent=ok?'▶ 수신 중':(msg||'오류');}
+function openMain(cam){
+  document.querySelectorAll('.cam-card.active').forEach(c=>c.classList.remove('active'));
+  document.querySelector(`.cam-card[data-id="${cam.id}"]`)?.classList.add('active');
+  document.getElementById('main-player-wrap').classList.add('visible');
+  document.getElementById('main-park-label').textContent=cam.park+' 국립공원';
+  document.getElementById('main-cam-label').textContent=cam.name+' — '+cam.desc;
+  if(mainPlayer){mainPlayer.dispose();mainPlayer=null;}
+  const wrap=document.getElementById('main-player-wrap');
+  const titleEl=document.getElementById('main-player-title');
+  const vid=document.createElement('video');vid.id='main-player';vid.className='video-js vjs-big-play-centered';
+  vid.setAttribute('controls','');vid.setAttribute('preload','auto');vid.setAttribute('playsinline','');
+  wrap.insertBefore(vid,titleEl);
+  mainPlayer=videojs('main-player',{autoplay:true,sources:[{src:cam.stream,type:'application/x-mpegURL'}],html5:{vhs:{overrideNative:true}},fluid:true});
+  mainPlayer.play().catch(()=>{});
+  wrap.scrollIntoView({behavior:'smooth',block:'start'});
+}
+renderGrid();
+</script>
+</body>
+</html>
