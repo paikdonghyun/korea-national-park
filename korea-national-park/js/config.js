@@ -37,7 +37,8 @@ const CONFIG = {
   // 상단 메뉴 — 페이지를 추가하면 여기에 한 줄만 등록
   NAV: [
     { href: 'index.html', label: '홈' },
-    { href: 'cctv.html', label: 'CCTV 현황' }
+    { href: 'live.html',  label: '실시간 영상' },
+    { href: 'cctv.html',  label: 'CCTV 현황' }
     // { href: 'trails.html', label: '탐방로' },
     // { href: 'weather.html', label: '날씨' },
   ]
